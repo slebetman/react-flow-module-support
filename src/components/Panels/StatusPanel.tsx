@@ -26,6 +26,7 @@ type SpeedType = keyof typeof simSpeed;
 
 export const StatusPanel: FC = () => {
 	const [speed, setSpeed] = useState<SpeedType>('normal');
+	const [glow, setGlow] = useState(false);
 	const ctx = getEditorContext();
 
 	useEffect(() => {
@@ -36,6 +37,10 @@ export const StatusPanel: FC = () => {
 		ctx.sim?.setSpeed(...simSpeed[speed]);
 	}, [speed]);
 
+	useEffect(() => {
+		ctx.setGlow?.(glow);
+	}, [glow]);
+
 	return (
 		<>
 			{ctx.sim ?
@@ -45,18 +50,40 @@ export const StatusPanel: FC = () => {
 						<span style={{ marginLeft: '10px' }}>
 							Module: {ctx.currentModule?.[0]?.label}
 						</span>
-					:	<select
-							onChange={(e) =>
-								setSpeed(e.currentTarget.value as SpeedType)
-							}
-							value={speed}
+					:	<div
+							style={{
+								fontSize: '12px',
+								display: 'flex',
+								flexDirection: 'row',
+								alignItems: 'center',
+							}}
 						>
-							{Object.keys(simSpeed).map((s, i) => (
-								<option key={`${s}${i}`} value={s}>
-									{s}
-								</option>
-							))}
-						</select>
+							speed:
+							<select
+								style={{
+									marginLeft: '4px',
+									marginRight: '10px',
+								}}
+								onChange={(e) =>
+									setSpeed(e.currentTarget.value as SpeedType)
+								}
+								value={speed}
+							>
+								{Object.keys(simSpeed).map((s, i) => (
+									<option key={`${s}${i}`} value={s}>
+										{s}
+									</option>
+								))}
+							</select>
+							glow:
+							<input
+								type='checkbox'
+								checked={glow}
+								onChange={(e) =>
+									setGlow(e.currentTarget.checked)
+								}
+							/>
+						</div>
 					}
 				</Panel>
 			: ctx.mode === 'module' ?

@@ -44,6 +44,8 @@ export type EditorContextType = {
 	code?: string[];
 	codeOpen?: boolean;
 	setCodeOpen?: Dispatch<SetStateAction<boolean>>;
+	glow?: boolean;
+	setGlow?: Dispatch<SetStateAction<boolean>>;
 } & Record<string, any>;
 
 const context: EditorContextType = {};

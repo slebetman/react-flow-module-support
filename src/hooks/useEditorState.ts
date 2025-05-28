@@ -28,6 +28,7 @@ export const useEditorState = () => {
 	const chart = useChart();
 	const mod = useChart();
 	const router = useRouter();
+	const [glow, setGlow] = useState(false);
 
 	setEditorContext({
 		currentModule,
@@ -58,6 +59,8 @@ export const useEditorState = () => {
 		code,
 		codeOpen,
 		setCodeOpen,
+		glow,
+		setGlow,
 	});
 
 	return {

@@ -248,28 +248,52 @@ const startSim = () => {
 	);
 
 	const updater = (state: SimState) => {
+		const activeTargets: Record<string,boolean> = {};
+
 		if (!ctx.currentModule?.length) {
-			ctx.setNodes?.((prevNodes) =>
-				prevNodes.map((n) => {
-					if (state[n.id] !== undefined) {
-						n.data = {
-							...n.data,
-							on: state[n.id],
-						};
-					}
-					return n;
-				}),
-			);
 			ctx.setEdges?.((prevEdges) =>
 				prevEdges.map((e) => {
+					const on = state[varName(e.id)];
+					const target = e.target;
+
+					if (target && on) {
+						activeTargets[target] = true;
+					}
+
 					e.data = {
 						...e.data,
-						on: state[varName(e.id)],
+						on,
 					};
 					return e;
 				}),
 			);
+
+			ctx.setNodes?.((prevNodes) =>
+				prevNodes.map((n) => {
+					const on = !!state[n.id] || activeTargets[n.id];
+
+					n.data = {
+						...n.data,
+						on,
+					};
+					
+					return n;
+				}),
+			);
 		} else {
+			ctx.setModuleEdges?.((prevEdges) =>
+				prevEdges.map((e) => {
+					const key = varName(e.id, {
+						prefix: ctx.currentModule?.[0]?.id,
+					});
+					const val = state[key];
+					e.data = {
+						...e.data,
+						on: val,
+					};
+					return e;
+				}),
+			);
 			ctx.setModuleNodes?.((prevNodes) =>
 				prevNodes.map((n) => {
 					if (
@@ -282,19 +306,6 @@ const startSim = () => {
 						};
 					}
 					return n;
-				}),
-			);
-			ctx.setModuleEdges?.((prevEdges) =>
-				prevEdges.map((e) => {
-					const key = varName(e.id, {
-						prefix: ctx.currentModule?.[0]?.id,
-					});
-					const val = state[key];
-					e.data = {
-						...e.data,
-						on: val,
-					};
-					return e;
 				}),
 			);
 		}

@@ -1,10 +1,15 @@
 import And from 'components/Icons/And';
 import { memo, FC } from 'react';
 import { NodeProps, Handle, Position } from 'reactflow';
+import DebugLabel from './DebugLabel';
+import { getEditorContext } from 'lib/editorContext';
 
-const AndGate: FC<NodeProps> = ({ id, selected }) => {
+const AndGate: FC<NodeProps> = ({ id, selected, data }) => {
+	const ctx = getEditorContext();
+	
 	return (
 		<>
+			<DebugLabel id={id} />
 			<Handle
 				type='target'
 				id='a'
@@ -17,7 +22,14 @@ const AndGate: FC<NodeProps> = ({ id, selected }) => {
 				position={Position.Left}
 				style={{ top: '15px' }}
 			/>
-			<And selected={selected} />
+			<div
+				style={{
+					filter: data?.on && ctx.glow ? 'drop-shadow(0 0 5px #ff0)'
+						: 'none',
+				}}
+			>
+				<And selected={selected} />
+			</div>
 			<Handle
 				type='source'
 				id='c'

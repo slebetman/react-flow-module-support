@@ -2,6 +2,7 @@ import { getEditorContext } from 'lib/editorContext';
 import { memo, FC, useState, FormEvent, CSSProperties, useEffect } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
 import { labelFont } from './nodeFont';
+import DebugLabel from './DebugLabel';
 
 const inputStyle: CSSProperties = {
 	...labelFont,
@@ -45,6 +46,7 @@ const InputNode: FC<NodeProps> = ({ data, id, selected }) => {
 
 	return (
 		<>
+			<DebugLabel id={id} />
 			{editmode ?
 				<div style={editStyle}>
 					<input
@@ -74,6 +76,8 @@ const InputNode: FC<NodeProps> = ({ data, id, selected }) => {
 							data.on ? '#9f9'
 							: data.on === false ? '#aaa'
 							: '#fff',
+						boxShadow: data.on && ctx.glow ? '0 0 10px #ff0'
+							: 'none',
 						cursor: ctx.sim ? 'pointer' : 'grab',
 					}}
 				>

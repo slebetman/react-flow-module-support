@@ -2,6 +2,8 @@ import { getChartRef } from 'lib/chartRefs';
 import { memo, FC, CSSProperties, useEffect, useState } from 'react';
 import { Handle, Position } from 'reactflow';
 import { labelFont } from './nodeFont';
+import DebugLabel from './DebugLabel';
+import { getEditorContext } from 'lib/editorContext';
 
 const nodeStyle: CSSProperties = {
 	...labelFont,
@@ -42,6 +44,7 @@ const ioStyle: CSSProperties = {
 export type ModuleData = {
 	label: string;
 	type: string;
+	on?: boolean;
 };
 
 export type ModuleProps = {
@@ -61,6 +64,7 @@ const Module: FC<ModuleProps> = ({ id, data, selected }) => {
 	const [outputs, setOutputs] = useState<IO[]>([]);
 
 	const chart = getChartRef();
+	const ctx = getEditorContext();
 
 	useEffect(() => {
 		setTimeout(() => {
@@ -92,6 +96,7 @@ const Module: FC<ModuleProps> = ({ id, data, selected }) => {
 
 	return (
 		<>
+			<DebugLabel id={id} />
 			{inputs.map((i, idx) => (
 				<Handle
 					type='target'
@@ -108,6 +113,8 @@ const Module: FC<ModuleProps> = ({ id, data, selected }) => {
 					...nodeStyle,
 					borderWidth: selected ? '2px' : '1px',
 					marginLeft: selected ? '-1px' : '0px',
+					boxShadow: data.on && ctx.glow ? '0 0 10px #ff0'
+						: 'none',
 				}}
 			>
 				<div style={nodeLabelStyle}>{label}</div>

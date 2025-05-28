@@ -1,10 +1,15 @@
 import Or from 'components/Icons/Or';
 import { memo, FC } from 'react';
 import { NodeProps, Handle, Position } from 'reactflow';
+import DebugLabel from './DebugLabel';
+import { getEditorContext } from 'lib/editorContext';
 
-const OrGate: FC<NodeProps> = ({ id, selected }) => {
+const OrGate: FC<NodeProps> = ({ id, selected, data }) => {
+	const ctx = getEditorContext();
+
 	return (
 		<>
+			<DebugLabel id={id} />
 			<Handle
 				type='target'
 				id='a'
@@ -17,7 +22,14 @@ const OrGate: FC<NodeProps> = ({ id, selected }) => {
 				position={Position.Left}
 				style={{ top: '15px' }}
 			/>
-			<Or selected={selected} />
+			<div
+				style={{
+					filter: data?.on && ctx.glow ? 'drop-shadow(0 0 5px #ff0)'
+						: 'none',
+				}}
+			>
+				<Or selected={selected} />
+			</div>
 			<Handle
 				type='source'
 				id='c'
