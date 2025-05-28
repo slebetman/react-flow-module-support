@@ -4,6 +4,9 @@ import { FC, useEffect } from 'react';
 import * as handlers from './Handlers';
 import { setChartRef } from 'lib/chartRefs';
 
+const DEBUG = typeof(sessionStorage) !== 'undefined' ?
+	sessionStorage.getItem('DEBUG') : false;
+
 type EffectsProps = {
 	ctx: EditorContextType;
 	fileName?: string;
@@ -19,6 +22,7 @@ export const Effects: FC<EffectsProps> = ({ ctx, fileName }) => {
 				compile({
 					nodes: n,
 					edges: e,
+					all: !!DEBUG,
 				}).map((x) => x.replace(/this\["(.+?)"\]/g, '$1')),
 			);
 		}
